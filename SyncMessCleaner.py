@@ -25,7 +25,7 @@ def get_recursive_file_list(file_base='./', search_pattern='.sync-conflict', exc
 def main(base_path):
     if os.path.isdir(base_path):
         print("Will work on: " + base_path)
-        todo_list = get_recursive_file_list(base_path)
+        todo_list = get_recursive_file_list(base_path, exclude_folders=['.stversions'])
         print("Finished building ToDo list. Will begin with checking:")
         for directory, conflict_file_name in todo_list:
             # extract file extension from filename info:
