@@ -25,7 +25,7 @@ def get_recursive_file_list(file_base='./', search_pattern='.sync-conflict', exc
 def main(base_path):
     if os.path.isdir(base_path):
         print("Will work on: " + base_path)
-        todo_list = get_recursive_file_list(base_path, exclude_folders=['.stversions'])
+        todo_list = get_recursive_file_list(base_path)
         print("Finished building ToDo list. Will begin with checking:")
         for directory, conflict_file_name in todo_list:
             # extract file extension from filename info:
@@ -45,16 +45,19 @@ def main(base_path):
             base_name = name_parts[0]
 
             # build hashes of original file and conflict file:
-            original_name = base_name + extension
-            conflict_crc = crc(os.path.join(directory, conflict_file_name))
-            original_crc = crc(os.path.join(directory, original_name))
+            if os.path.isfile(os.path.join(directory, original_name)):
+                original_name = base_name + extension
+                conflict_crc = crc(os.path.join(directory, conflict_file_name))
+                original_crc = crc(os.path.join(directory, original_name))
 
-            if original_crc == conflict_crc:
-                os.unlink(os.path.join(directory, conflict_file_name))
-                print("Deleted " + conflict_file_name + " as it has the same CRC as the original file.")
+                if original_crc == conflict_crc:
+                    os.unlink(os.path.join(directory, conflict_file_name))
+                    print("Deleted " + conflict_file_name + " as it has the same CRC as the original file.")
+                else:
+                    print("Warning: There are real differences between " + original_name
+                          + " and the conflicting file in " + directory)
             else:
-                print("Warning: There are real differences between " + original_name +  " and the conflicting file in "
-                      + directory)
+                print("Warning: There is no original file " + original_name + " in the directory " + directory)
     else:
         print("Directory " + base_path + " does not exist. Aborting.")
         exit(-1)
