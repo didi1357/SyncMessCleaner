@@ -26,8 +26,11 @@ def main(base_path):
     if os.path.isdir(base_path):
         print("Will work on: " + base_path)
         todo_list = get_recursive_file_list(base_path)
-        print("Finished building ToDo list. Will begin with checking:")
+        print("Finished building ToDo list. There are {} entries to check:".format(len(todo_list)))
+        item_cnt = 0
         for directory, conflict_file_name in todo_list:
+            item_cnt += 1
+            print("Working on item {} of {}".format(item_cnt, len(todo_list)))
             # extract file extension from filename info:
             extension = os.path.splitext(conflict_file_name)
             if len(extension) < 2:
