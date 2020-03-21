@@ -45,8 +45,8 @@ def main(base_path):
             base_name = name_parts[0]
 
             # build hashes of original file and conflict file:
+            original_name = base_name + extension
             if os.path.isfile(os.path.join(directory, original_name)):
-                original_name = base_name + extension
                 conflict_crc = crc(os.path.join(directory, conflict_file_name))
                 original_crc = crc(os.path.join(directory, original_name))
 
